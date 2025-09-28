@@ -15,3 +15,7 @@ model/best.pt
 # IDE / OS
 .vscode/
 .DS_Store
+
+# .gitignore
+.env
+
