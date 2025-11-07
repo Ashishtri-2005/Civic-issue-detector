@@ -1,7 +1,6 @@
 import { useState, useEffect, memo, useCallback } from "react";
 import "./UploadForm.css";
 
-// ✅ Self-contained Timestamp (no props, no parent re-render)
 const Timestamp = memo(() => {
   const [time, setTime] = useState(new Date());
 
@@ -33,14 +32,13 @@ const Timestamp = memo(() => {
 Timestamp.displayName = "Timestamp";
 
 function UploadForm() {
-  // ✅ State Management
   const [file, setFile] = useState(null);
   const [status, setStatus] = useState("");
   const [showCamera, setShowCamera] = useState(false);
   const [stream, setStream] = useState(null);
   const [ws, setWs] = useState(null);
 
-  // ✅ WebSocket connection
+  // WebSocket connection
   useEffect(() => {
     const connectWebSocket = () => {
       try {
@@ -96,7 +94,7 @@ function UploadForm() {
     };
   }, []);
 
-  // ✅ Utility: Status class based on state
+  //  Utility: Status class based on state
   const getStatusClass = useCallback(() => {
     if (status.includes("Uploading") || status.includes("Camera opened") || status.includes("Getting your location"))
       return "uploading";
@@ -106,7 +104,7 @@ function UploadForm() {
     return "";
   }, [status]);
 
-  // ✅ File Upload Function
+  //  File Upload Function
   const handleUpload = useCallback(
     async (selectedFile) => {
       if (!selectedFile) {
@@ -154,7 +152,7 @@ function UploadForm() {
       formData.append("file", selectedFile);
       formData.append("latitude", latitude);
       formData.append("longitude", longitude);
-      formData.append("timestamp", new Date().toISOString());
+      formData.append("timestamp", new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }));
 
       try {
         setStatus("📤 Uploading your report...");
@@ -265,7 +263,7 @@ function UploadForm() {
             closeCamera();
             handleUpload(capturedFile);
           } else {
-            setStatus("❌ Error: Failed to capture photo. Please try again.");
+            setStatus(" Error: Failed to capture photo. Please try again.");
           }
         },
         "image/jpeg",
@@ -273,20 +271,20 @@ function UploadForm() {
       );
     } catch (err) {
       console.error("Photo capture error:", err);
-      setStatus("❌ Error: Failed to capture photo. Please try again.");
+      setStatus(" Error: Failed to capture photo. Please try again.");
     }
   }, [closeCamera, handleUpload]);
 
   const handleFileSelect = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-      console.log("📁 File selected:", selectedFile.name);
+      console.log(" File selected:", selectedFile.name);
       handleUpload(selectedFile);
     }
     event.target.value = "";
   };
 
-  // ✅ Cleanup camera stream on unmount
+  //  Cleanup camera stream on unmount
   useEffect(() => {
     return () => {
       if (stream) {
@@ -342,7 +340,7 @@ function UploadForm() {
                 📸 Capture Photo
               </button>
               <button className="close-camera-btn" onClick={closeCamera}>
-                ❌ Close Camera
+                Close Camera
               </button>
             </div>
           </div>

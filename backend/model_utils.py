@@ -1,24 +1,23 @@
-# backend/model_utils.py
+
 from ultralytics import YOLO
 import cv2
 import numpy as np
 import os
 
-# Load YOLO model once
+
 try:
     model_path = "D:/AMC/model/best.pt"
     if os.path.exists(model_path):
         model = YOLO(model_path)
         print(f"✅ YOLO model loaded successfully from: {model_path}")
     else:
-        print(f"❌ Model file not found at: {model_path}")
-        # Create a dummy model for testing
+        print(f" Model file not found at: {model_path}")
         model = None
 except Exception as e:
-    print(f"❌ Error loading YOLO model: {e}")
+    print(f" Error loading YOLO model: {e}")
     model = None
 
-# Class labels
+
 CLASS_LABELS = {
     0: "pothole",
     1: "fire", 
@@ -32,7 +31,6 @@ HIGH_PRIORITY_CLASSES = ["fire"]
 def detect_objects(image_path):
     """Detect objects in the given image using YOLO model"""
     
-    # Check if model is available
     if model is None:
         print("⚠️ Using dummy detection - model not loaded")
         return [{
@@ -42,7 +40,7 @@ def detect_objects(image_path):
             "age_days": 30
         }]
     
-    # Check if image exists
+
     if not os.path.exists(image_path):
         raise ValueError(f"Cannot find image: {image_path}")
     
@@ -70,18 +68,17 @@ def detect_objects(image_path):
                 cls = int(boxes[i].cls)
                 label = CLASS_LABELS.get(cls, "unknown")
                 
-                # Add to detected classes set
+               
                 detected_classes.add(label)
 
                 age_days = None
                 if label == "pothole":
                     # Check if high priority classes (like fire) are detected
                     if any(priority_class in detected_classes for priority_class in HIGH_PRIORITY_CLASSES):
-                        print(f"⚠️ Skipping pothole detection - high priority class detected")
+                        print(f" Skipping pothole detection - high priority class detected")
                         continue
                     
                     x1, y1, x2, y2 = map(int, box)
-                    # Ensure crop coordinates are valid
                     if (x2 > x1 and y2 > y1 and 
                         x1 >= 0 and y1 >= 0 and 
                         x2 <= img.shape[1] and y2 <= img.shape[0]):
@@ -89,7 +86,7 @@ def detect_objects(image_path):
                         if crop_img.size > 0:
                             age_days = estimate_pothole_age(crop_img)
                     else:
-                        print("⚠️ Invalid bounding box for pothole age estimation")
+                        print(" Invalid bounding box for pothole age estimation")
 
                 detection = {
                     "bbox": box.tolist(),
@@ -98,20 +95,20 @@ def detect_objects(image_path):
                     "age_days": age_days
                 }
                 detections.append(detection)
-                print(f"   👉 Detected: {label} (confidence: {conf:.3f})")
+                print(f"    Detected: {label} (confidence: {conf:.3f})")
 
         print(f"✅ Detection completed: {len(detections)} objects found")
         return detections
 
     except Exception as e:
-        print(f"❌ Detection error: {e}")
+        print(f" Detection error: {e}")
         raise
 
 def estimate_pothole_age(crop_img):
     """Estimate pothole age based on image characteristics"""
     try:
         if crop_img.size == 0:
-            return 30  # Default value
+            return 1  
         
         gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
         laplacian_var = cv2.Laplacian(gray, cv2.CV_64F).var()
@@ -128,5 +125,5 @@ def estimate_pothole_age(crop_img):
         return min(max(estimated_age_days, 0), 365)
         
     except Exception as e:
-        print(f"⚠️ Pothole age estimation error: {e}")
-        return 30  # Default fallback value
+        print(f" Pothole age estimation error: {e}")
+        return 1

@@ -1,4 +1,4 @@
-# backend/app.py
+
 from fastapi import FastAPI, UploadFile, WebSocket, WebSocketDisconnect, File, Form
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,25 +14,18 @@ from db import save_detection
 
 app = FastAPI()
 
-# -------------------------
-# CORS (allow your frontend)
-# -------------------------
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["amc.vercel.app"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# -------------------------
-# Ensure temp folder exists
-# -------------------------
+
 os.makedirs("temp", exist_ok=True)
 
-# -------------------------
-# Upload endpoint
-# -------------------------
 @app.post("/upload")
 async def upload_image(
     file: UploadFile = File(...),
@@ -123,9 +116,7 @@ async def websocket_endpoint(websocket: WebSocket):
         await unregister(websocket)
         print("🔌 WebSocket connection closed")
 
-# -------------------------
-# Health check endpoint
-# -------------------------
+
 @app.get("/")
 async def root():
     return {"message": "Backend is running!", "status": "healthy"}
@@ -138,8 +129,5 @@ async def health_check():
         "timestamp": datetime.utcnow().isoformat()
     }
 
-# -------------------------
-# Run the application
-# -------------------------
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)

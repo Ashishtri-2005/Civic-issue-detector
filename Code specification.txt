@@ -1,0 +1,97 @@
+-----------Software and Frameworks----------
+Python 3.9+: Primary programming language used for backend API development and model inference.
+
+FastAPI: Modern, asynchronous web framework powering the backend services and API endpoints.
+
+React.js: Frontend library for building an interactive, responsive user interface.
+
+MongoDB Atlas: Cloud-hosted NoSQL database service used to store detection records, user submissions, and metadata.
+
+Uvicorn: ASGI server used to run FastAPI applications in production.
+
+Data Models and AI Frameworks
+YOLOv8 (You Only Look Once v8): Real-time object detection deep learning model trained to identify potholes, fires, garbage, and waterlogging.
+
+Custom-trained weights (best.pt): Model weights trained specifically on urban hazard datasets for high accuracy.
+
+OpenCV: Computer vision library used for image preprocessing and specialized tasks like pothole age estimation based on edge and texture analysis.
+
+
+-----------Libraries and Dependencies-----------
+Backend Python Packages (listed in requirements.txt):
+
+fastapi — Web API framework
+
+uvicorn[standard] — ASGI server for deployment
+
+pymongo — MongoDB client for database operations
+
+torch — PyTorch backend for YOLOv8
+
+opencv-python — Image processing tools
+
+numpy — Numerical operations support
+
+python-multipart — To handle multipart file data uploads
+
+Frontend JavaScript Libraries:
+
+react — UI rendering
+
+reconnecting-websocket — Ensures persistent WebSocket connections for live alerts
+
+CSS/SCSS libraries for styling and responsive 
+
+
+
+
+--------Procedure for Running the Project---------
+Set up Environment
+
+Install Python 3.9+ and Node.js.
+
+Clone the project repository.
+
+Install Backend Dependencies
+
+Navigate to the backend folder.
+
+Run pip install -r requirements.txt to install required Python packages.
+
+Configure MongoDB
+
+Create a MongoDB Atlas cluster or local instance.
+
+Add your connection string to the .env file as MONGO_URI.
+
+Start Backend Server
+
+Run the FastAPI app using:
+
+bash
+uvicorn app:app --reload
+Install Frontend Dependencies
+
+Navigate to the frontend folder.
+
+Run npm install to install React dependencies.
+
+Start Frontend Server
+
+Run the React development server:
+
+bash
+npm start
+Use the Application
+
+Access the frontend at http://localhost:3000.
+
+Upload images and report hazards.
+
+View live detection notifications on the dashboard.
+
+Monitor Logs and Alerts
+
+Observe backend console for processing logs.
+
+Check live alerts via WebSocket on frontend.

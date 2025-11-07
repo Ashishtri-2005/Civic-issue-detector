@@ -1,11 +1,9 @@
-# backend/notifications.py
 import asyncio
 import json
 from datetime import datetime
 
 clients = set()
 
-# Department mapping for different detection classes
 DEPARTMENT_MAPPING = {
     "pothole": "Roads Department",
     "fire": "Fire Department", 
@@ -29,10 +27,10 @@ async def broadcast(message: dict):
         return
         
     try:
-        # Add timestamp and department to message
+ 
         department = DEPARTMENT_MAPPING.get(message.get("class"), "General Department")
         
-        # Simplified message without confidence percentage
+
         simplified_message = {
             "class": message.get("class"),
             "department": department,
@@ -40,13 +38,11 @@ async def broadcast(message: dict):
             "type": "detection_alert"
         }
         
-        # Add age_days only for pothole
         if message.get("class") == "pothole" and message.get("age_days"):
             simplified_message["age_days"] = message.get("age_days")
         
         data = json.dumps(simplified_message)
-        
-        # Send to all connected clients
+
         await asyncio.gather(
             *[client.send_text(data) for client in clients],
             return_exceptions=True
