@@ -1,2 +1,2 @@
 # Civic-issue-detector
-u have to just upload the image of issue it will detect the civic issue in image e.g. pothole,garbage, fire and report it 
+You just need to upload an image of a civic issue, and the system automatically detects problems such as potholes, garbage, or fire using image classification. I also developed a heuristic model to estimate the age of potholes, which helps in assessing their severity and prioritizing repair work. This project combines computer vision and data analytics to support smarter civic issue management.
